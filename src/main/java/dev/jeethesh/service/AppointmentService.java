@@ -23,12 +23,13 @@ public class AppointmentService {
     }
     
     public List<Map<String, String>> findAvailableSlots(String calendarId, Integer duration, LocalDateTime startTime, LocalDateTime endTime) {
-        List<Appointment> appointments = appointmentRepository.findAllByCalendarIdAndStartTimeBetween(
-                calendarId, startTime, endTime);
+    	  try {
+              List<Appointment> appointments = appointmentRepository.findAllByCalendarIdAndStartTimeBetween(
+                      calendarId, startTime, endTime);
 
-        List<Map<String, String>> availableSlots = new ArrayList<>();
+              List<Map<String, String>> availableSlots = new ArrayList<>();
 
-        // Assuming the appointments list is sorted by start time
+      
         LocalDateTime currentSlotStart = startTime;
 
         for (Appointment appointment : appointments) {
@@ -54,7 +55,15 @@ public class AppointmentService {
             availableSlots.add(slot);
         }
 
-        return availableSlots;
+     // Check if startTime is less than endTime
+        if (startTime.isAfter(endTime)) {
+            throw new IllegalArgumentException("Start Time should be less than endTime");
+        }
+
+	        return availableSlots;
+	    } catch (Exception e) {
+	        throw new RuntimeException("An error occurred while finding available slots: " + e.getMessage(), e);
+	    }
     }
 
 }
