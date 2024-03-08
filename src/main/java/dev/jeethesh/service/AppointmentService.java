@@ -65,5 +65,4 @@ public class AppointmentService {
 	        throw new RuntimeException("An error occurred while finding available slots: " + e.getMessage(), e);
 	    }
     }
-
 }
